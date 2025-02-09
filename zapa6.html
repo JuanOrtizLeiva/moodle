@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Emprendimientos - Foresta de Zapallar</title>
+  
+  <!-- Fuentes Google Fonts: Poppins o Roboto -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Variables de color y tipografía */
+    :root {
+      /* Paleta de colores */
+      --color-principal: #4CAF50;   /* Verde principal */
+      --color-secundario: #2e7d32; /* Verde más oscuro */
+      --color-fondo: #f6f9f6;      /* Fondo claro */
+      --color-texto: #333;         
+      --color-contraste: #ffffff;  
+      --color-sombra: rgba(0, 0, 0, 0.1);
+
+      /* Fuentes */
+      --fuente-primaria: 'Poppins', 'Roboto', sans-serif;
+      --fuente-secundaria: 'Roboto', sans-serif;
+
+      /* Tamaños de fuente base */
+      --font-size-desktop: 16px;  
+      --font-size-mobile: 14px;   
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--color-fondo);
+      font-family: var(--fuente-primaria);
+      color: var(--color-texto);
+      font-size: var(--font-size-desktop); /* Tamaño por defecto en escritorio */
+    }
+
+    /* Contenedor principal */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px var(--color-sombra);
+    }
+
+    .container h2 {
+      text-align: center;
+      color: var(--color-secundario);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Barra de filtros */
+    .search-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-container label {
+      font-weight: 500;
+      margin: 0.5rem 0 0.5rem 0;
+    }
+
+    .search-container input[type="text"],
+    .search-container select {
+      width: 80%;
+      max-width: 400px;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-family: var(--fuente-secundaria);
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Tabla con scroll horizontal (solo para escritorio) */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px; /* Evita celdas demasiado comprimidas */
+    }
+
+    thead {
+      background-color: var(--color-principal);
+      color: var(--color-contraste);
+    }
+
+    thead th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+    }
+
+    tbody tr {
+      transition: background-color 0.2s;
+    }
+
+    tbody tr:hover {
+      background-color: #e8f5e9; /* suave tono verde al pasar el mouse */
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+      vertical-align: middle;
+      position: relative;
+    }
+
+    /* Enlaces y acciones */
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-principal);
+      color: var(--color-contraste);
+      border-radius: 5px;
+      padding: 0.4rem 0.6rem;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: 0 2px 4px var(--color-sombra);
+      transition: background-color 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .icon-btn:hover {
+      background-color: var(--color-secundario);
+    }
+
+    /* Íconos (emojis) */
+    .icon {
+      margin-right: 0.25rem;
+    }
+
+    /* Ajustes responsivos */
+    @media (max-width: 768px) {
+      body {
+        font-size: var(--font-size-mobile); 
+      }
+      /* Ajusta inputs de filtro */
+      .search-container input[type="text"],
+      .search-container select {
+        width: 90%;
+      }
+      /* 
+        Transforma la tabla en un formato apilado en móviles. 
+        Oculta thead, y cada tr / td se vuelve "block". 
+      */
+      thead {
+        display: none;
+      }
+      table, tbody, tr, td {
+        display: block;
+        width: 100%;
+      }
+      tr {
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #f2f2f2;
+      }
+      td {
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid #ddd;
+      }
+      td::before {
+        content: attr(data-label); 
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.3rem;
+        color: var(--color-secundario);
+      }
+      /* Último td sin borde extra */
+      tr:last-of-type td:last-of-type {
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Emprendimientos de la Comunidad</h2>
+
+    <!-- Barra de filtros (descripción y categoría) -->
+    <div class="search-container">
+      <label for="searchInput">Buscar en descripción:</label>
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Ej. empanada, asesoría, flores..."
+        onkeyup="applyFilters()"
+      >
+
+      <label for="categorySelect">Filtrar por categoría:</label>
+      <select id="categorySelect" onchange="applyFilters()">
+        <option value="">Todas</option>
+        <option value="Alimentos">Alimentos</option>
+        <option value="Servicios profesionales">Servicios profesionales</option>
+        <option value="Otros">Otros</option>
+      </select>
+    </div>
+
+    <!-- Tabla con datos -->
+    <div class="table-responsive">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <!-- Nuevo orden de columnas -->
+            <th>Descripción</th>
+            <th>Categoría</th>
+            <th>Hora Apertura</th>
+            <th>Hora Cierre</th>
+            <th>Lote</th>
+            <th>N° Parcela</th>
+            <th>Fono de Contacto</th>
+            <th>Con despacho a domicilio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Filas antiguas con "No" en despacho -->
+          <tr>
+            <td data-label="Descripción">Asesorías contables, tributarias y laborales</td>
+            <td data-label="Categoría">Servicios profesionales</td>
+            <td data-label="Hora Apertura">9</td>
+            <td data-label="Hora Cierre">18</td>
+            <td data-label="Lote">Y</td>
+            <td data-label="N° Parcela">9</td>
+            <td data-label="Fono de Contacto">
+              <div class="actions">
+                +569995088401
+                <a href="tel:+569995088401" class="icon-btn" title="Llamar">
+                  <span class="icon">📞</span>
+                </a>
+                <a href="https://wa.me/569995088401" target="_blank" class="icon-btn" title="WhatsApp">
+                  <span class="icon">💬</span>
+                </a>
+              </div>
+            </td>
+            <td data-label="Con despacho a domicilio">No</td>
+          </tr>
+          <tr>
+            <td data-label="Descripción">Productos Gourmet: mermeladas, conservas, granola, galletas, rollos de canela</td>
+            <td data-label="Categoría">Alimentos</td>
+            <td data-label="Hora Apertura">8</td>
+            <td data-label="Hora Cierre">20</td>
+            <td data-label="Lote">L</td>
+            <td data-label="N° Parcela">31</td>
+            <td data-label="Fono de Contacto">
+              <div class="actions">
+                +56964895072
+                <a href="tel:+56964895072" class="icon-btn" title="Llamar">
+                  <span class="icon">📞</span>
+                </a>
+                <a href="https://wa.me/56964895072" target="_blank" class="icon-btn" title="WhatsApp">
+                  <span class="icon">💬</span>
+                </a>
+              </div>
+            </td>
+            <td data-label="Con despacho a domicilio">No</td>
+          </tr>
+          <tr>
+            <td data-label="Descripción">Menaje hogar, ropa de cama, flores de bach, accesorios varios</td>
+            <td data-label="Categoría">Otros</td>
+            <td data-label="Hora Apertura">10</td>
+            <td data-label="Hora Cierre">18</td>
+            <td data-label="Lote">P</td>
+            <td data-label="N° Parcela">28</td>
+            <td data-label="Fono de Contacto">
+              <div class="actions">
+                +56946865205
+                <a href="tel:+56946865205" class="icon-btn" title="Llamar">
+                  <span class="icon">📞</span>
+                </a>
+                <a href="https://wa.me/56946865205" target="_blank" class="icon-btn" title="WhatsApp">
+                  <span class="icon">💬</span>
+                </a>
+              </div>
+            </td>
+            <td data-label="Con despacho a domicilio">No</td>
+          </tr>
+          <tr>
+            <td data-label="Descripción">Confecciones de productos de tela, individuales, porta cubiertos, bolsas</td>
+            <td data-label="Categoría">Otros</td>
+            <td data-label="Hora Apertura">10</td>
+            <td data-label="Hora Cierre">23</td>
+            <td data-label="Lote">G</td>
+            <td data-label="N° Parcela">38</td>
+            <td data-label="Fono de Contacto">
+              <div class="actions">
+                +56979245578
+                <a href="tel:+56979245578" class="icon-btn" title="Llamar">
+                  <span class="icon">📞</span>
+                </a>
+                <a href="https://wa.me/56979245578" target="_blank" class="icon-btn" title="WhatsApp">
+                  <span class="icon">💬</span>
+                </a>
+              </div>
+            </td>
+            <td data-label="Con despacho a domicilio">No</td>
+          </tr>
+
+          <!-- Filas nuevas (datos proporcionados) con "Sí" en despacho -->
+          <tr>
+            <td data-label="Descripción">Podología, Pedicure, Manicure</td>
+            <td data-label="Categoría">Otros</td>
+            <td data-label="Hora Apertura">10</td>
+            <td data-label="Hora Cierre">17</td>
+            <td data-label="Lote">N</td>
+            <td data-label="N° Parcela">19</td>
+            <td data-label="Fono de Contacto">
+              <div class="actions">
+                +56959331180
+                <a href="tel:+56959331180" class="icon-btn" title="Llamar">
+                  <span class="icon">📞</span>
+                </a>
+                <a href="https://wa.me/56959331180" target="_blank" class="icon-btn" title="WhatsApp">
+                  <span class="icon">💬</span>
+                </a>
+              </div>
+            </td>
+            <td data-label="Con despacho a domicilio">Sí</td>
+          </tr>
+          <tr>
+            <td data-label="Descripción">
+              Queso de cabra por pieza (artesanal, por temporadas), huevos frescos de gallina feliz
+            </td>
+            <td data-label="Categoría">Alimentos</td>
+            <td data-label="Hora Apertura">9</td>
+            <td data-label="Hora Cierre">21</td>
+            <td data-label="Lote">P</td>
+            <td data-label="N° Parcela">15</td>
+            <td data-label="Fono de Contacto">
+              <div class="actions">
+                +56996935324
+                <a href="tel:+56996935324" class="icon-btn" title="Llamar">
+                  <span class="icon">📞</span>
+                </a>
+                <a href="https://wa.me/56996935324" target="_blank" class="icon-btn" title="WhatsApp">
+                  <span class="icon">💬</span>
+                </a>
+              </div>
+            </td>
+            <td data-label="Con despacho a domicilio">Sí</td>
+          </tr>
+          <tr>
+            <td data-label="Descripción">Property Partners, Corretaje de propiedades</td>
+            <td data-label="Categoría">Servicios profesionales</td>
+            <td data-label="Hora Apertura">8</td>
+            <td data-label="Hora Cierre">22</td>
+            <td data-label="Lote">T</td>
+            <td data-label="N° Parcela">28</td>
+            <td data-label="Fono de Contacto">
+              <div class="actions">
+                +56991999190
+                <a href="tel:+56991999190" class="icon-btn" title="Llamar">
+                  <span class="icon">📞</span>
+                </a>
+                <a href="https://wa.me/56991999190" target="_blank" class="icon-btn" title="WhatsApp">
+                  <span class="icon">💬</span>
+                </a>
+              </div>
+            </td>
+            <td data-label="Con despacho a domicilio">Sí</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Script para filtros (descripción y categoría) -->
+  <script>
+    function applyFilters() {
+      const searchVal = document.getElementById("searchInput").value.toLowerCase();
+      const catVal = document.getElementById("categorySelect").value;  // "", "Alimentos", etc.
+
+      const rows = document.querySelectorAll("#dataTable tbody tr");
+
+      rows.forEach(row => {
+        // Primera columna (descripción)
+        const descCell = row.querySelector("td:nth-child(1)");
+        const descText = descCell.textContent.toLowerCase();
+
+        // Segunda columna (categoría)
+        const catCell = row.querySelector("td:nth-child(2)");
+        const catText = catCell.textContent.trim();
+
+        // Comparaciones
+        const matchesSearch = (searchVal === "") || (descText.indexOf(searchVal) > -1);
+        const matchesCategory = (catVal === "") || (catText === catVal);
+
+        // Mostrar/ocultar fila
+        if (matchesSearch && matchesCategory) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
